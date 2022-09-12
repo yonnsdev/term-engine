@@ -24,6 +24,12 @@ typedef struct Viewport{
     int color; 
 } Viewport;
 
+typedef struct Debug {
+    int line_num;
+    char* title;
+    char* value;
+} Debug;
+
 typedef struct Circle {
     int x;
     int y;
@@ -38,18 +44,27 @@ typedef struct Rectangle {
 } Rectangle;
 
 typedef struct CoreData{
-    Viewport* viewport;                                                         // Viewport
+    // Viewport
+    WINDOW *viewport;                                                           // Viewport
+    Viewport *viewport_data;                                                    // Viewport data
     int width, height;                                                          // Viewport width & height
-
+    bool border;                                                                // Viewport border (Enabled/Disabled)
     int fps;                                                                    // Viewport refresh rate
     int prev_clock_time;                                                        // Previous processor clock time
+    bool color;                                                                 // Color status (Enabled/Disabled)
+
+    // Debug
+    WINDOW *debug_menu;                                                         // Debug menu
+    Debug *debug_data;                                                          // Debug menu data
+    bool debug_enabled;                                                         // Debug menu state (Enabled/Disabled)
+    int debug_height;                                                           // Debug menu height
 } CoreData;
 
 //======================================================
 // Global Variables Definition
 //======================================================
-static CoreData CORE;
 
+static CoreData CORE;
 
 //======================================================
 // Functions
@@ -60,7 +75,9 @@ void initEngine();                                                              
 void deinitEngine();                                                            // Deinit engine
 
 // Viewport
-void setViewport(int width, int height, char fc);                               // Set viewport parameters
+void setViewport(int width, int height);                                        // Set viewport parameters
+void setColor();                                                                // Enable color rendering
+void setBorder();                                                               // Enable viewport border
 void renderViewport();                                                          // Render viewport to terminal
 void clearViewport();                                                           // Clear viewport
 
@@ -78,8 +95,14 @@ void drawRectangle(int x, int y, int w, int h, bool fill, char ch, int color);  
 void drawRectangleT(Rectangle rect, bool fill, char ch, int color);             // Draw rectangle with rectangle type
 
 // Collision
-bool checkCollisionPointRect(Vector2 point, Rectangle rect);                     // Check collision between point and rectangle
+bool checkCollisionPointRect(Vector2 point, Rectangle rect);                    // Check collision between point and rectangle
 bool checkCollisionPointCirc(Vector2 point, Circle circ);                       // Check collision between point and circle
 bool checkCollisionRects(Rectangle rect1, Rectangle rect2);                     // Check collision between two rectangles
+
+// Debug
+void showDebug();                                                               // Show debug menu
+void hideDebug();                                                               // Hide debug menu
+void quitDebug();                                                               // Quit debug menu
+void updateDebugAttrib(int line_num, char* title, char* value);                 // Update debug attributes
 
 #endif
