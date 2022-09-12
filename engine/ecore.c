@@ -87,11 +87,6 @@ void setColor() {
 void setBorder() {
     CORE.border = true;
     wresize(CORE.viewport, CORE.height + 2, (CORE.width * 2) + 2);
-
-    // Render border
-    if (CORE.border) {
-        box(CORE.viewport, 0, 0);
-    }
 }
 
 // Render viewport to terminal
@@ -105,12 +100,14 @@ void renderViewport() {
 
     getmaxyx(stdscr, w_height, w_width);
 
-    // Add border padding if border is enabled
+    // Render border & add border padding if border is enabled
     if (CORE.border) {
+        box(CORE.viewport, 0, 0);
         border_padding = 1;
 
         border_padding_amt = 2;
         if (CORE.debug_enabled) {
+            box(CORE.debug_menu, 0, 0);
             border_padding_amt += 2;
         }
     }
@@ -145,9 +142,6 @@ void renderViewport() {
 
     // Render debug
     if (CORE.debug_enabled) {
-        if (CORE.border) {
-            box(CORE.debug_menu, 0, 0);
-        }
         for (int i = 0; i < CORE.debug_height; i++) {
             if (CORE.debug_data[i].title != 0) {
                 mvwprintw(CORE.debug_menu, i + border_padding, 0 + border_padding, "%s: %s", CORE.debug_data[i].title, CORE.debug_data[i].value);
@@ -167,7 +161,10 @@ void renderViewport() {
 
 // Clear viewport
 void clearViewport() {
-    clear();
+    werase(CORE.viewport);
+    if (CORE.debug_enabled) {
+        werase(CORE.debug_menu);
+    }
     for (int i=0; i < (CORE.width * 2) * CORE.height; i++) {
         CORE.viewport_data[i].ch = 0;
         CORE.viewport_data[i].color = 0;
