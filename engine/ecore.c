@@ -2,9 +2,10 @@
 #include "unistd.h"
 
 #define DEFAULT_CORE_BORDER             false
-#define DEFAULT_CORE_FPS                30
+#define DEFAULT_CORE_TARGET_FPS         12
 #define DEFAULT_CORE_COLOR              false
 #define DEFAULT_CORE_PREV_CLOCK_TIME    clock()
+#define DEFAULT_CORE_INPUT_ENABLED      false
 #define DEFAULT_CORE_DEBUG_ENABLED      false
 #define DEFAULT_CORE_DEBUG_HEIGHT       3
 
@@ -24,9 +25,9 @@ void initEngine() {
     keypad(stdscr, TRUE);
 
     // defaults
-    CORE.border = DEFAULT_CORE_BORDER;
-    CORE.fps    = DEFAULT_CORE_FPS;
-    CORE.color  = DEFAULT_CORE_COLOR;
+    CORE.border             = DEFAULT_CORE_BORDER;
+    CORE.target_fps         = DEFAULT_CORE_TARGET_FPS;
+    CORE.color_enabled      = DEFAULT_CORE_COLOR;
     CORE.prev_clock_time    = DEFAULT_CORE_PREV_CLOCK_TIME;
     CORE.debug_enabled      = DEFAULT_CORE_DEBUG_ENABLED;
     CORE.debug_height       = DEFAULT_CORE_DEBUG_HEIGHT;
@@ -37,7 +38,6 @@ void deinitEngine() {
     curs_set(1);
     endwin();
 }
-
 
 //======================================================
 // Viewport
@@ -52,12 +52,7 @@ void deinitEngine() {
 void setViewport(int width, int height) {
     CORE.width = width;
     CORE.height = height;
-
     CORE.viewport = newwin(CORE.height, CORE.width * 2, 0, 0);
-    nodelay(CORE.viewport, TRUE);
-
-    // Viewport layout = [char | int][char | int][char | int] ···
-    // One pixel       = "##"
     CORE.viewport_data = (Viewport*)malloc((CORE.width * 2) * CORE.height * sizeof(Viewport));
     for (int i=0; i < (CORE.width * 2) * CORE.height; i++) {
         CORE.viewport_data[i].ch = 0;
@@ -68,7 +63,7 @@ void setViewport(int width, int height) {
 // Enable color rendering
 void setColor() {
     if (has_colors()) {
-        CORE.color = true;
+        CORE.color_enabled = true;
 
         start_color();
         init_pair(COLOR_BLACK      , COLOR_BLACK      , COLOR_BLACK);
@@ -80,7 +75,7 @@ void setColor() {
         init_pair(COLOR_CYAN       , COLOR_CYAN       , COLOR_BLACK);
         init_pair(COLOR_WHITE      , COLOR_WHITE      , COLOR_BLACK);
     } else {
-        CORE.color = false;
+        CORE.color_enabled = false;
     }
 }
 
@@ -128,13 +123,13 @@ void renderViewport() {
     // Render viewport
     for (int i = 0; i < (CORE.width * 2) * CORE.height; i++) {
         if (CORE.viewport_data[i].ch != 0) {
-            if (CORE.color) {
+            if (CORE.color_enabled) {
                 wattron(CORE.viewport, COLOR_PAIR(CORE.viewport_data[i].color));
             }
 
             mvwaddch(CORE.viewport, i / (CORE.width * 2) + border_padding, i % (CORE.width * 2) + border_padding, CORE.viewport_data[i].ch);
 
-            if (CORE.color) {
+            if (CORE.color_enabled) {
                 wattroff(CORE.viewport, COLOR_PAIR(CORE.viewport_data[i].color));
             }
         }
@@ -155,8 +150,8 @@ void renderViewport() {
     // Method 1 (Original Method)
     // while (clock() - CORE.prev_clock_time < CLOCKS_PER_SEC / CORE.fps);
     // Method 2 (A lot less processor intensive)
-    if ((CLOCKS_PER_SEC / CORE.fps) - (clock() - CORE.prev_clock_time) > 0) {
-        usleep((CLOCKS_PER_SEC / CORE.fps) - (clock() - CORE.prev_clock_time));
+    if ((CLOCKS_PER_SEC / CORE.target_fps) - (clock() - CORE.prev_clock_time) * 1000 > 0) {
+        usleep((CLOCKS_PER_SEC / CORE.target_fps) - (clock() - CORE.prev_clock_time));
     } 
 }
 
@@ -181,13 +176,18 @@ void clearViewport() {
  * Set target refresh rate
  * @param fps FPS
  */
-void setTargetFPS(int fps) {
-    CORE.fps = fps;
+void setTargetFPS(uint16_t fps) {
+    CORE.target_fps = fps;
 }
 
+// Get current fps
+// double getFPS() {
+//     return CORE.curr_fps;
+// }
+
 // Return clock time (milliseconds)
-ulong_t getClocktime() {
-    return clock() / 1000;
+uint16_t getClocktime() {
+    return clock();
 }
 
 
@@ -239,9 +239,8 @@ void showDebug() {
     if (CORE.border) {
         border_padding = 2;
     }
-    CORE.debug_menu = newwin(CORE.debug_height + border_padding, (CORE.width * 2) + border_padding, CORE.height + border_padding, 0);
-    nodelay(CORE.debug_menu, TRUE);
 
+    CORE.debug_menu = newwin(CORE.debug_height + border_padding, (CORE.width * 2) + border_padding, CORE.height + border_padding, 0);
     CORE.debug_data = (Debug*)malloc(CORE.debug_height * sizeof(Debug));
 }
 
