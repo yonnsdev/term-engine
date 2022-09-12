@@ -49,7 +49,7 @@ void deinitEngine() {
  * @param height  Height of viewport
  * @param fc      Fill character
  */
-void createViewport(int width, int height) {
+void setViewport(int width, int height) {
     CORE.width = width;
     CORE.height = height;
 

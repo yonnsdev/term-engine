@@ -75,7 +75,7 @@ void initEngine();                                                              
 void deinitEngine();                                                            // Deinit engine
 
 // Viewport
-void createViewport(int width, int height);                                     // Create viewport w/parameters
+void setViewport(int width, int height);                                     // Create viewport w/parameters
 void setColor();                                                                // Enable color rendering
 void setBorder();                                                               // Enable viewport border
 void renderViewport();                                                          // Render viewport to terminal
