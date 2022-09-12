@@ -2,21 +2,20 @@
 CC = clang
 CFLAGS = -std=c11 -Wall
 
-# src, obj, build, out
+# src, obj, out
 SRC = $(shell find . -name "*.c")
 OBJ = $(SRC:.c=.o)
+OUT = engine.a
 
-# linker
-#LDFLAGS = -lncurses
-LDFLAGS = 
+.PHONY: all clean
+all: build 
 
-.PHONY: clean
- 
 %.o: %.c engine.h
-	$(CC) -o $@ -c $< $(CFLAGS) $(LDFLAGS)
+	$(CC) -o $@ -c $< $(CFLAGS)
 
 build: $(OBJ)
-	@echo $(filter %.o, $^)
+	ar -cr $(OUT) $(filter %.o, $^)
+	rm -rf $(OBJ)
 
 clean:
-	rm -rf $(OBJ)
+	rm -rf $(OBJ) $(OUT)

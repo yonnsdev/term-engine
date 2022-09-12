@@ -8,67 +8,76 @@
 </div>
 
 ## Features
-- Terminal color support
-- (Not much yet)
+
+-   Terminal color support
+-   Keyboard input support
+-   (Not much yet)
 
 ## Basic example
+
 ```c
 #include "engine.h"
 
 int main() {
     initEngine();
-    
+
     setViewport(60, 30);
     setTargetFPS(12);
     setColor();
     setBorder();
-    
+
     // Replace with custom loop ending condition
     while (true) {
         clearViewport();
-        
+
         drawCircleT(30, 15, 5 false, '#', COLOR_CYAN);
 
         renderViewport();
     }
-    
+
     deinitEngine();
     return 0;
 }
 ```
 
 ## Installation
+
 1. Clone repository
+
 ```
 git clone https://github.com/yonnsdev/term-engine.git
 ```
+
 2. Move "engine" folder to project directory
 3. Build using `make`
 4. Include to project
+
 ```
 (example makefile)
 
 INCFLAGS = -Iengine
 LDFLAGS  = -lncurses
-LDFLAGS += engine/ecore.o
-LDFLAGS += engine/eshapes.o
+LDFLAGS += engine/engine.a
 ```
+
 ## Cheatsheet
+
 ```c
 // Initialization
-void initEngine();                            // Init engine
-void deinitEngine();                          // Deinit engine
+void initEngine();                                                              // Init engine
+void deinitEngine();                                                            // Deinit engine
 
 // Viewport
-void setViewport(int width, int height);      // Create viewport w/parameters
-void setColor();                              // Enable color rendering
-void setBorder();                             // Enable viewport border
-void renderViewport();                        // Render viewport to terminal
-void clearViewport();                         // Clear viewport
+void setViewport(int width, int height);                                        // Create viewport w/parameters
+void setColor();                                                                // Enable color rendering
+void setBorder();                                                               // Enable viewport border
+void renderViewport();                                                          // Render viewport to terminal
+void clearViewport();                                                           // Clear viewport
 
 // Time
-void setTargetFPS(int fps);                   // Set target refresh rate
-ulong_t getClocktime();                       // Return clock time (milliseconds)
+void setTargetFPS(uint16_t fps);                                                // Set target refresh rate
+double getFPS();                                                                // Get current refresh rate
+uint16_t getClocktime();                                                        // Return clock time (milliseconds)
 
 // Draw
 void drawPixel(int precise_x, int precise_y, char ch, int color);               // Draw pixel "#"
@@ -80,13 +89,17 @@ void drawRectangle(int x, int y, int w, int h, bool fill, char ch, int color);  
 void drawRectangleT(Rectangle rect, bool fill, char ch, int color);             // Draw rectangle with rectangle type
 
 // Collision
-bool checkCollisionPointRect(Vector2 point, Rectangle rect);      // Check collision between point and rectangle
-bool checkCollisionPointCirc(Vector2 point, Circle circ);         // Check collision between point and circle
-bool checkCollisionRects(Rectangle rect1, Rectangle rect2);       // Check collision between two rectangles
+bool checkCollisionPointRect(Vector2 point, Rectangle rect);                    // Check collision between point and rectangle
+bool checkCollisionPointCirc(Vector2 point, Circle circ);                       // Check collision between point and circle
+bool checkCollisionRects(Rectangle rect1, Rectangle rect2);                     // Check collision between two rectangles
+
+// Input
+int getKey();                                                                   // Get pressed key (ncurses)
+void flushInputBuf();                                                           // Flush input buffer (ncurses)
 
 // Debug
-void showDebug();                                                 // Show debug menu
-void hideDebug();                                                 // Hide debug menu
-void quitDebug();                                                 // Quit debug menu
-void updateDebugAttrib(int line_num, char* title, char* value);   // Update/Add debug attributes
+void showDebug();                                                               // Show debug menu
+void hideDebug();                                                               // Hide debug menu
+void quitDebug();                                                               // Quit debug menu
+void updateDebugAttrib(int line_num, char* title, char* value);                 // Update/Add debug attributes
 ```

@@ -175,6 +175,7 @@ void hideDebug();                                                               
 void quitDebug();                                                               // Quit debug menu
 void updateDebugAttrib(int line_num, char* title, char* value);                 // Update/Add debug attributes
 
+// todo: add mouse input support
 // todo: add shaders
 
 #endif
