@@ -84,6 +84,7 @@ void setColor() {
     }
 }
 
+// Enable border
 void setBorder() {
     CORE.border = true;
     wresize(CORE.viewport, CORE.height + 2, (CORE.width * 2) + 2);
@@ -230,6 +231,7 @@ void drawPoint(int x, int y, char ch, int color) {
 // Debugging
 //======================================================
 
+// Show debug menu
 void showDebug() {
     CORE.debug_enabled = true;
 
@@ -243,10 +245,12 @@ void showDebug() {
     CORE.debug_data = (Debug*)malloc(CORE.debug_height * sizeof(Debug));
 }
 
+// Hide debug menu
 void hideDebug() {
     CORE.debug_enabled = false;
 }
 
+// Quit debug menu
 void quitDebug() {
     CORE.debug_enabled = false;
 
@@ -254,6 +258,7 @@ void quitDebug() {
     delwin(CORE.debug_menu);
 }
 
+// Update/Add debug attribute
 void updateDebugAttrib(int line_num, char* title, char* value) {
     // Reset max height so empty space can be removed
     int max_height = DEFAULT_CORE_DEBUG_HEIGHT;
