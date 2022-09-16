@@ -53,6 +53,7 @@ void setViewport(int width, int height) {
     CORE.width = width;
     CORE.height = height;
     CORE.viewport = newwin(CORE.height, CORE.width * 2, 0, 0);
+
     CORE.viewport_data = (Viewport*)malloc((CORE.width * 2) * CORE.height * sizeof(Viewport));
     for (int i=0; i < (CORE.width * 2) * CORE.height; i++) {
         CORE.viewport_data[i].ch = 0;
@@ -89,10 +90,10 @@ void setBorder() {
 void renderViewport() {
     CORE.prev_clock_time = clock();
     
-    int fv_height = CORE.height;        // rendered full viewport height
+    int full_height = CORE.height;      // rendered full (viewport + debug) height
+    int w_width, w_height;              // terminal window size
     int border_padding = 0;             // border padding
     int border_padding_amt = 0;         // border padding amount
-    int w_width, w_height;              // terminal window size
 
     getmaxyx(stdscr, w_height, w_width);
 
@@ -110,11 +111,11 @@ void renderViewport() {
 
     // Full viewport height depending if debug menu is enabled
     if (CORE.debug_enabled) {
-        fv_height += CORE.debug_height;
+        full_height += CORE.debug_height;
     }
 
     // Exits if viewport is smaller than needed area
-    if ((w_height <= fv_height + (border_padding * border_padding_amt)) || (w_width <= CORE.width * 2 + (border_padding * border_padding_amt))) {
+    if ((w_height <= full_height + (border_padding * border_padding_amt)) || (w_width <= CORE.width * 2 + (border_padding * border_padding_amt))) {
         deinitEngine();
         printf("Exited: Window is smaller than viewport size!");
         exit(0);
@@ -146,13 +147,16 @@ void renderViewport() {
         wrefresh(CORE.debug_menu);
     }
 
+    // Get keyboard input
+    CORE.input_key = getch();
+
     // Delay to match fps
     // Method 1 (Original Method)
     // while (clock() - CORE.prev_clock_time < CLOCKS_PER_SEC / CORE.fps);
     // Method 2 (A lot less processor intensive)
     if ((CLOCKS_PER_SEC / CORE.target_fps) - (clock() - CORE.prev_clock_time) * 1000 > 0) {
         usleep((CLOCKS_PER_SEC / CORE.target_fps) - (clock() - CORE.prev_clock_time));
-    } 
+    }
 }
 
 // Clear viewport
@@ -180,13 +184,8 @@ void setTargetFPS(uint16_t fps) {
     CORE.target_fps = fps;
 }
 
-// Get current fps
-// double getFPS() {
-//     return CORE.curr_fps;
-// }
-
 // Return clock time (milliseconds)
-uint16_t getClocktime() {
+unsigned int getClocktime() {
     return clock();
 }
 
@@ -232,7 +231,7 @@ void drawPoint(int x, int y, char ch, int color) {
 //======================================================
 
 // Show debug menu
-void showDebug() {
+void setDebug() {
     CORE.debug_enabled = true;
 
     int border_padding = 0;
@@ -258,7 +257,7 @@ void quitDebug() {
 }
 
 // Update/Add debug attribute
-void updateDebugAttrib(int line_num, char* title, char* value) {
+void addDebugAttrib(int line_num, char* title, char* value) {
     // Reset max height so empty space can be removed
     int max_height = DEFAULT_CORE_DEBUG_HEIGHT;
     for (int i = 0; i < CORE.debug_height; i++) {

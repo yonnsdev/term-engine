@@ -2,7 +2,7 @@
 
 // Get pressed key (ncurses)
 int getKey() {
-    return wgetch(stdscr);
+    return getch();
 }
 
 // Flush input buffer (ncurses)

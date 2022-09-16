@@ -48,11 +48,10 @@ typedef struct Rectangle {
 typedef struct CoreData{
     // Viewport
     WINDOW *viewport;                                                           // Viewport
-    Viewport *viewport_data;                                                    // Viewport data
+    Viewport *viewport_data;                                                     // Viewport data
     int width, height;                                                          // Viewport width & height
     bool border;                                                                // Viewport border (Enabled/Disabled)
     int target_fps;                                                             // Viewport target refresh rate
-    double curr_fps;                                                            // Current fps
     int prev_clock_time;                                                        // Previous processor clock time
     bool color_enabled;                                                         // Enable color (Enabled/Disabled)
 
@@ -143,9 +142,8 @@ void clearViewport();                                                           
 
 // Time
 
-void setTargetFPS(uint16_t fps);                                                // Set target refresh rate
-//! double getFPS();                                                             // Get current refresh rate
-uint16_t getClocktime();                                                        // Return clock time (milliseconds)
+void setTargetFPS(uint16_t fps);                                                // Set target refresh rate (Recommend using default (12))
+unsigned int getClocktime();                                                    // Return clock time (milliseconds)
 
 // Draw
 
@@ -170,10 +168,10 @@ void flushInputBuf();                                                           
 
 // Debug
 
-void showDebug();                                                               // Show debug menu
+void setDebug();                                                                // Enable debug menu
 void hideDebug();                                                               // Hide debug menu
 void quitDebug();                                                               // Quit debug menu
-void updateDebugAttrib(int line_num, char* title, char* value);                 // Update/Add debug attributes
+void addDebugAttrib(int line_num, char* title, char* value);                    // Add/Update debug attributes
 
 // todo: add mouse input support
 // todo: add shaders
