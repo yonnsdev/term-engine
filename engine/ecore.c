@@ -147,9 +147,6 @@ void renderViewport() {
         wrefresh(CORE.debug_menu);
     }
 
-    // Get keyboard input
-    CORE.input_key = getch();
-
     // Delay to match fps
     // Method 1 (Original Method)
     // while (clock() - CORE.prev_clock_time < CLOCKS_PER_SEC / CORE.fps);
