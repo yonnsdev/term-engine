@@ -7,30 +7,44 @@
 
 </div>
 
-## Features
+## Installation
 
--   Terminal color support
--   Keyboard input support
--   (Not much yet)
+1. Clone repository
+```
+git clone https://github.com/yonnsdev/term-engine.git
+```
+2. Build using `make`
+```
+cd engine
+make
+```
+3. Add to project
+```
+(example makefile)
+
+INCFLAGS = -Iengine
+LDFLAGS  = -lncurses
+LDFLAGS += engine/engine.a
+```
 
 ## Basic example
 
 ```c
 #include "engine.h"
 
+bool windowClose();
+
 int main() {
     initEngine();
 
-    setViewport(60, 30);
-    setTargetFPS(12);
+    setViewport(30, 20);
     setColor();
     setBorder();
 
-    // Replace with custom loop ending condition
-    while (true) {
+    while (!windowClose()) {
         clearViewport();
 
-        drawCircleT(30, 15, 5 false, '#', COLOR_CYAN);
+        drawCircle(15, 10, 5, false, '#', COLOR_CYAN);
 
         renderViewport();
     }
@@ -38,26 +52,17 @@ int main() {
     deinitEngine();
     return 0;
 }
-```
 
-## Installation
-
-1. Clone repository
-
-```
-git clone https://github.com/yonnsdev/term-engine.git
-```
-
-2. Move "engine" folder to project directory
-3. Build using `make`
-4. Include to project
-
-```
-(example makefile)
-
-INCFLAGS = -Iengine
-LDFLAGS  = -lncurses
-LDFLAGS += engine/engine.a
+bool windowClose() {
+    int key = getKey();
+    
+    switch (key) {
+        case KEY_SPACE:
+            return true;
+        default:
+            return false;
+    }
+}
 ```
 
 ## Cheatsheet
@@ -75,9 +80,8 @@ void renderViewport();                                                          
 void clearViewport();                                                           // Clear viewport
 
 // Time
-void setTargetFPS(uint16_t fps);                                                // Set target refresh rate
-double getFPS();                                                                // Get current refresh rate
-uint16_t getClocktime();                                                        // Return clock time (milliseconds)
+void setTargetFPS(uint16_t fps);                                                // Set target refresh rate (Recommend using default (12))
+unsigned int getClocktime();                                                    // Return clock time (milliseconds)
 
 // Draw
 void drawPixel(int precise_x, int precise_y, char ch, int color);               // Draw pixel "#"
@@ -98,8 +102,8 @@ int getKey();                                                                   
 void flushInputBuf();                                                           // Flush input buffer (ncurses)
 
 // Debug
-void showDebug();                                                               // Show debug menu
+void setDebug();                                                                // Enable debug menu
 void hideDebug();                                                               // Hide debug menu
 void quitDebug();                                                               // Quit debug menu
-void updateDebugAttrib(int line_num, char* title, char* value);                 // Update/Add debug attributes
+void addDebugAttrib(int line_num, char* title, char* value);                    // Add/Update debug attributes
 ```
