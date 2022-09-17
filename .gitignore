@@ -1,8 +1,0 @@
-.DS_Store
-.vscode
-*.o
-*.a
-build
-src
-compile_flags.txt
-/Makefile
