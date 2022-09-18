@@ -179,7 +179,7 @@ void clearViewport() {
  * Set target refresh rate
  * @param fps FPS
  */
-void setTargetFPS(uint16_t fps) {
+void setTargetFPS(unsigned short fps) {
     CORE.target_fps = fps;
 }
 
