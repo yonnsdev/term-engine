@@ -174,3 +174,12 @@ bool checkCollisionRects(Rectangle rect1, Rectangle rect2) {
         }
     return false;
 }
+
+bool checkCollisionCircs(Circle circ1, Circle circ2) {
+    // todo: find better alg
+    double points_distance = sqrt(pow(abs(circ1.x - circ2.x), 2) + pow(abs(circ1.y - circ2.y), 2));
+    if (points_distance <= (circ1.radius + circ2.radius + 2)) {
+        return true;
+    }
+    return false;
+}

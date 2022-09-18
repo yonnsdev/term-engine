@@ -165,6 +165,7 @@ void drawRectangleT(Rectangle rect, bool fill, char ch, int color);             
 bool checkCollisionPointRect(Vector2 point, Rectangle rect);                    // Check collision between point and rectangle
 bool checkCollisionPointCirc(Vector2 point, Circle circ);                       // Check collision between point and circle
 bool checkCollisionRects(Rectangle rect1, Rectangle rect2);                     // Check collision between two rectangles
+bool checkCollisionCircs(Circle circ1, Circle circ2);                           // Check collision between two circles
 
 // Input
 
