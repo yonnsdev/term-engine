@@ -9,7 +9,7 @@
 
 <div align="center">
   
-  ![preview](imgs/preview.gif)
+  ![image](imgs/preview.gif)
   
 </div>
 
