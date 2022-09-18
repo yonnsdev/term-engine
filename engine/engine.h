@@ -48,12 +48,16 @@ typedef struct Rectangle {
 typedef struct CoreData{
     // Viewport
     WINDOW *viewport;                                                           // Viewport
-    Viewport *viewport_data;                                                     // Viewport data
+    Viewport *viewport_data;                                                    // Viewport data
     int width, height;                                                          // Viewport width & height
     bool border;                                                                // Viewport border (Enabled/Disabled)
     int target_fps;                                                             // Viewport target refresh rate
-    int prev_clock_time;                                                        // Previous processor clock time
+    double current_fps;                                                         // Viewport current fps
     bool color_enabled;                                                         // Enable color (Enabled/Disabled)
+
+    // Time
+    int prev_clock_time;                                                        // Previous processor clock time
+    clock_t sleep_incr;                                                         // Total sleep time
 
     // Debug
     WINDOW *debug_menu;                                                         // Debug menu
@@ -141,8 +145,9 @@ void renderViewport();                                                          
 void clearViewport();                                                           // Clear viewport
 
 // Time
-
+// todo: multi-threaded time system for more accuracy
 void setTargetFPS(uint16_t fps);                                                // Set target refresh rate (Recommend using default (12))
+double getCurrentFPS();                                                         // Get current fps
 unsigned int getClocktime();                                                    // Return clock time (milliseconds)
 
 // Draw

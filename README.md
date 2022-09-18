@@ -10,15 +10,20 @@
 ## Installation
 
 1. Clone repository
+
 ```
 git clone https://github.com/yonnsdev/term-engine.git
 ```
+
 2. Build using `make`
+
 ```
 cd engine
 make
 ```
+
 3. Add to project
+
 ```
 (example makefile)
 
@@ -55,7 +60,7 @@ int main() {
 
 bool windowClose() {
     int key = getKey();
-    
+
     switch (key) {
         case KEY_SPACE:
             return true;
@@ -81,6 +86,7 @@ void clearViewport();                                                           
 
 // Time
 void setTargetFPS(uint16_t fps);                                                // Set target refresh rate (Recommend using default (12))
+double getCurrentFPS();                                                         // Get current fps
 unsigned int getClocktime();                                                    // Return clock time (milliseconds)
 
 // Draw

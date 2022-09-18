@@ -5,6 +5,7 @@
 #define DEFAULT_CORE_TARGET_FPS         12
 #define DEFAULT_CORE_COLOR              false
 #define DEFAULT_CORE_PREV_CLOCK_TIME    clock()
+#define DEFAULT_CORE_SLEEP_INCR         0
 #define DEFAULT_CORE_INPUT_ENABLED      false
 #define DEFAULT_CORE_DEBUG_ENABLED      false
 #define DEFAULT_CORE_DEBUG_HEIGHT       3
@@ -29,6 +30,7 @@ void initEngine() {
     CORE.target_fps         = DEFAULT_CORE_TARGET_FPS;
     CORE.color_enabled      = DEFAULT_CORE_COLOR;
     CORE.prev_clock_time    = DEFAULT_CORE_PREV_CLOCK_TIME;
+    CORE.sleep_incr         = DEFAULT_CORE_SLEEP_INCR;
     CORE.debug_enabled      = DEFAULT_CORE_DEBUG_ENABLED;
     CORE.debug_height       = DEFAULT_CORE_DEBUG_HEIGHT;
 }
@@ -147,13 +149,13 @@ void renderViewport() {
         wrefresh(CORE.debug_menu);
     }
 
-    // Delay to match fps
-    // Method 1 (Original Method)
-    // while (clock() - CORE.prev_clock_time < CLOCKS_PER_SEC / CORE.fps);
-    // Method 2 (A lot less processor intensive)
-    if ((CLOCKS_PER_SEC / CORE.target_fps) - (clock() - CORE.prev_clock_time) * 1000 > 0) {
-        usleep((CLOCKS_PER_SEC / CORE.target_fps) - (clock() - CORE.prev_clock_time));
+    int sleep_ticks = 0; // Since clock() stops while sleeping
+    if ((CLOCKS_PER_SEC / CORE.target_fps) - (clock() - CORE.prev_clock_time) > 0) {
+        sleep_ticks = (CLOCKS_PER_SEC / CORE.target_fps) - (clock() - CORE.prev_clock_time);
+        usleep(sleep_ticks);
     }
+    CORE.sleep_incr += sleep_ticks;
+    CORE.current_fps = (double)(CLOCKS_PER_SEC) / (double)((clock() - CORE.prev_clock_time + sleep_ticks));
 }
 
 // Clear viewport
@@ -181,9 +183,12 @@ void setTargetFPS(uint16_t fps) {
     CORE.target_fps = fps;
 }
 
+double getCurrentFPS() {
+    return CORE.current_fps;
+}
 // Return clock time (milliseconds)
 unsigned int getClocktime() {
-    return clock();
+    return clock() + CORE.sleep_incr;
 }
 
 
