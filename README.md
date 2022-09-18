@@ -7,7 +7,11 @@
 
 </div>
 
-![preview](imgs/preview.gif)
+<div align="center">
+  
+  ![preview](imgs/preview.gif)
+  
+</div>
 
 ## Installation
 
