@@ -91,7 +91,7 @@ void renderViewport();                                                          
 void clearViewport();                                                           // Clear viewport
 
 // Time
-void setTargetFPS(uint16_t fps);                                                // Set target refresh rate (Recommend using default (12))
+void setTargetFPS(unsigned short fps);                                                // Set target refresh rate (Recommend using default (12))
 double getCurrentFPS();                                                         // Get current fps
 unsigned int getClocktime();                                                    // Return clock time (milliseconds)
 
