@@ -92,7 +92,7 @@ void clearViewport();                                                           
 
 // Time
 void setTargetFPS(int);                                                         // Set target refresh rate (Recommend using default (12))
-double getCurrentFPS();                                                         // Get current fps (Not accurate!)
+unsigned long getFrameCount();                                                  // Get frame count since program start (Resets to 0 after 4e+9)
 
 // Draw
 void drawPixel(int precise_x, int precise_y, char ch, int color);               // Draw pixel "#"

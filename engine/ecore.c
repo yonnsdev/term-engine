@@ -4,6 +4,7 @@
 
 #define DEFAULT_CORE_BORDER             false
 #define DEFAULT_CORE_TARGET_FPS         12
+#define DEFAULT_CORE_FRAME_COUNT        0
 #define DEFAULT_CORE_COLOR              false
 #define DEFAULT_CORE_PREV_CLOCK_TIME    clock()
 #define DEFAULT_CORE_INPUT_ENABLED      false
@@ -11,7 +12,7 @@
 #define DEFAULT_CORE_DEBUG_HEIGHT       3
 
 //======================================================
-// Private Functions
+// System Functions (Not accessable to user)
 //======================================================
 
 // usleep() on a separate thread
@@ -20,6 +21,36 @@ void *utimesleep(void *args)
     int *time = (int *)args;
     usleep(*time);
     return NULL;
+}
+
+// Check if viewport is big enough to render
+void checkViewport() {
+    int full_height = CORE.height;      // rendered full (viewport + debug) height
+    CORE.border_padding = 0;             // border padding
+    CORE.border_padding_amt = 0;         // border padding amount
+
+    if (CORE.border) {
+        CORE.border_padding = 1;
+        CORE.border_padding_amt = 2;
+
+        if (CORE.debug_enabled) {
+            CORE.border_padding_amt += 2;
+        }
+    }
+
+    getmaxyx(stdscr, CORE.win_height, CORE.win_width);
+
+    // Full viewport height depending if debug menu is enabled
+    if (CORE.debug_enabled) {
+        full_height += CORE.debug_height;
+    }
+
+    // Exits if viewport is smaller than needed area
+    if ((CORE.win_height <= full_height + (CORE.border_padding * CORE.border_padding_amt)) || (CORE.win_width <= CORE.width * 2 + (CORE.border_padding * CORE.border_padding_amt))) {
+        deinitEngine();
+        printf("Exited: Window is smaller than viewport size!");
+        exit(0);
+    }
 }
 
 //======================================================
@@ -40,6 +71,7 @@ void initEngine() {
     // defaults
     CORE.border             = DEFAULT_CORE_BORDER;
     CORE.target_fps         = DEFAULT_CORE_TARGET_FPS;
+    CORE.frame_count        = DEFAULT_CORE_FRAME_COUNT;
     CORE.color_enabled      = DEFAULT_CORE_COLOR;
     CORE.debug_enabled      = DEFAULT_CORE_DEBUG_ENABLED;
     CORE.debug_height       = DEFAULT_CORE_DEBUG_HEIGHT;
@@ -71,6 +103,8 @@ void setViewport(int width, int height) {
         CORE.viewport_data[i].ch = 0;
         CORE.viewport_data[i].color = 0;
     }
+
+    checkViewport();
 }
 
 // Enable color rendering
@@ -96,43 +130,26 @@ void setColor() {
 void setBorder() {
     CORE.border = true;
     wresize(CORE.viewport, CORE.height + 2, (CORE.width * 2) + 2);
+    checkViewport();    // check again to make sure border is drawable
 }
 
 // Render viewport to terminal
 void renderViewport() {
-    long prev_clock = clock();
-    int full_height = CORE.height;      // rendered full (viewport + debug) height
-    int w_width, w_height;              // terminal window size
-    int border_padding = 0;             // border padding
-    int border_padding_amt = 0;         // border padding amount
+    CORE.prev_clock = clock();
 
-    pthread_t sleep_id;                 // sleep thread id
-    int sleep_time;                     // sleep time (in microseconds)
+    // Check if window is resized
+    int nwin_width, nwin_height;
+    getmaxyx(stdscr, nwin_width, nwin_height);
+    if (CORE.win_width != nwin_width || CORE.win_height != nwin_height) {
+        checkViewport();
+    }
 
-    getmaxyx(stdscr, w_height, w_width);
-
-    // Render border & add border padding if border is enabled
+    // Render border if border is enabled
     if (CORE.border) {
         box(CORE.viewport, 0, 0);
-        border_padding = 1;
-
-        border_padding_amt = 2;
         if (CORE.debug_enabled) {
             box(CORE.debug_menu, 0, 0);
-            border_padding_amt += 2;
         }
-    }
-
-    // Full viewport height depending if debug menu is enabled
-    if (CORE.debug_enabled) {
-        full_height += CORE.debug_height;
-    }
-
-    // Exits if viewport is smaller than needed area
-    if ((w_height <= full_height + (border_padding * border_padding_amt)) || (w_width <= CORE.width * 2 + (border_padding * border_padding_amt))) {
-        deinitEngine();
-        printf("Exited: Window is smaller than viewport size!");
-        exit(0);
     }
 
     // Render viewport
@@ -142,7 +159,7 @@ void renderViewport() {
                 wattron(CORE.viewport, COLOR_PAIR(CORE.viewport_data[i].color));
             }
 
-            mvwaddch(CORE.viewport, i / (CORE.width * 2) + border_padding, i % (CORE.width * 2) + border_padding, CORE.viewport_data[i].ch);
+            mvwaddch(CORE.viewport, i / (CORE.width * 2) + CORE.border_padding, i % (CORE.width * 2) + CORE.border_padding, CORE.viewport_data[i].ch);
 
             if (CORE.color_enabled) {
                 wattroff(CORE.viewport, COLOR_PAIR(CORE.viewport_data[i].color));
@@ -155,19 +172,25 @@ void renderViewport() {
     if (CORE.debug_enabled) {
         for (int i = 0; i < CORE.debug_height; i++) {
             if (CORE.debug_data[i].title != 0) {
-                mvwprintw(CORE.debug_menu, i + border_padding, 0 + border_padding, "%s: %s", CORE.debug_data[i].title, CORE.debug_data[i].value);
+                mvwprintw(CORE.debug_menu, i + CORE.border_padding, 0 + CORE.border_padding, "%s: %s", CORE.debug_data[i].title, CORE.debug_data[i].value);
             }
         }
         wrefresh(CORE.debug_menu);
     }
 
-    long curr_clock = clock();
-    if ((CLOCKS_PER_SEC / CORE.target_fps) - (curr_clock - prev_clock) > 0) {
-        sleep_time = (CLOCKS_PER_SEC / CORE.target_fps) - (curr_clock - prev_clock);
-        pthread_create(&sleep_id, NULL, utimesleep, (void *)&sleep_time);
-        pthread_join(sleep_id, NULL);
+    // Set frame count for next frame
+    CORE.frame_count++;
+    if (CORE.frame_count == 4000000001) {
+        CORE.frame_count = 0;
     }
-    CORE.current_fps = (double)(CLOCKS_PER_SEC) / (double)((clock() - prev_clock) * 100);
+
+    // Delay clock
+    CORE.curr_clock = clock();
+    if ((CLOCKS_PER_SEC / CORE.target_fps) - (CORE.curr_clock - CORE.prev_clock) > 0) {
+        CORE.sleep_time = (CLOCKS_PER_SEC / CORE.target_fps) - (CORE.curr_clock - CORE.prev_clock);
+        pthread_create(&CORE.sleep_id, NULL, utimesleep, (void *)&CORE.sleep_time);
+        pthread_join(CORE.sleep_id, NULL);
+    }
 }
 
 // Clear viewport
@@ -195,8 +218,8 @@ void setTargetFPS(int fps) {
     CORE.target_fps = abs(fps);
 }
 
-double getCurrentFPS() {
-    return CORE.current_fps;
+unsigned long getFrameCount() {
+    return CORE.frame_count;
 }
 
 

@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <ncurses.h>
 #include <time.h>
+#include <pthread.h>
 
 //======================================================
 // Structures Definition
@@ -52,7 +53,7 @@ typedef struct CoreData{
     int width, height;                                                          // Viewport width & height
     bool border;                                                                // Viewport border (Enabled/Disabled)
     int target_fps;                                                             // Viewport target refresh rate
-    double current_fps;                                                         // Viewport current fps
+    unsigned long frame_count;                                                  // Frame count since program start
     bool color_enabled;                                                         // Enable color (Enabled/Disabled)
 
     // Debug
@@ -60,6 +61,14 @@ typedef struct CoreData{
     Debug *debug_data;                                                          // Debug menu data
     bool debug_enabled;                                                         // Enable debug menu (Enabled/Disabled)
     int debug_height;                                                           // Debug menu height
+
+    // System
+    int win_width, win_height;                                                  // Window width & height
+    long prev_clock, curr_clock;                                                // Recorded clock time
+    pthread_t sleep_id;                                                         // Sleep thread id
+    int sleep_time;                                                             // Sleep time (in microseconds)
+    int border_padding;                                                         // Border padding
+    int border_padding_amt;                                                     // Total border padding amount
 } CoreData;
 
 //======================================================
@@ -141,8 +150,9 @@ void renderViewport();                                                          
 void clearViewport();                                                           // Clear viewport
 
 // Time
+
 void setTargetFPS(int);                                                         // Set target refresh rate (Recommend using default (12))
-double getCurrentFPS();                                                         // Get current fps (Not accurate!)
+unsigned long getFrameCount();                                                  // Get frame count since program start (Resets to 0 after 4e+9)
 
 // Draw
 
@@ -173,7 +183,6 @@ void hideDebug();                                                               
 void quitDebug();                                                               // Quit debug menu
 void addDebugAttrib(int line_num, char* title, char* value);                    // Add/Update debug attributes
 
-// todo: replace clock() with something more consistant
 // todo: add mouse input support
 // todo: add shaders
 
