@@ -55,10 +55,6 @@ typedef struct CoreData{
     double current_fps;                                                         // Viewport current fps
     bool color_enabled;                                                         // Enable color (Enabled/Disabled)
 
-    // Time
-    int prev_clock_time;                                                        // Previous processor clock time
-    clock_t sleep_incr;                                                         // Total sleep time
-
     // Debug
     WINDOW *debug_menu;                                                         // Debug menu
     Debug *debug_data;                                                          // Debug menu data
@@ -145,10 +141,8 @@ void renderViewport();                                                          
 void clearViewport();                                                           // Clear viewport
 
 // Time
-// todo: multi-threaded time system for more accuracy
-void setTargetFPS(unsigned short fps);                                                // Set target refresh rate (Recommend using default (12))
-double getCurrentFPS();                                                         // Get current fps
-unsigned int getClocktime();                                                    // Return clock time (milliseconds)
+void setTargetFPS(int);                                                         // Set target refresh rate (Recommend using default (12))
+double getCurrentFPS();                                                         // Get current fps (Not accurate!)
 
 // Draw
 
@@ -169,8 +163,8 @@ bool checkCollisionCircs(Circle circ1, Circle circ2);                           
 
 // Input
 
-int getKey();                                                                   // Get pressed key (ncurses)
-void flushInputBuf();                                                           // Flush input buffer (ncurses)
+int getKey();                                                                   // Get pressed key
+void flushInputBuf();                                                           // Flush input buffer
 
 // Debug
 
@@ -179,6 +173,7 @@ void hideDebug();                                                               
 void quitDebug();                                                               // Quit debug menu
 void addDebugAttrib(int line_num, char* title, char* value);                    // Add/Update debug attributes
 
+// todo: replace clock() with something more consistant
 // todo: add mouse input support
 // todo: add shaders
 

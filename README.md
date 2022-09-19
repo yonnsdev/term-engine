@@ -91,9 +91,8 @@ void renderViewport();                                                          
 void clearViewport();                                                           // Clear viewport
 
 // Time
-void setTargetFPS(unsigned short fps);                                                // Set target refresh rate (Recommend using default (12))
-double getCurrentFPS();                                                         // Get current fps
-unsigned int getClocktime();                                                    // Return clock time (milliseconds)
+void setTargetFPS(int);                                                         // Set target refresh rate (Recommend using default (12))
+double getCurrentFPS();                                                         // Get current fps (Not accurate!)
 
 // Draw
 void drawPixel(int precise_x, int precise_y, char ch, int color);               // Draw pixel "#"
@@ -111,8 +110,8 @@ bool checkCollisionRects(Rectangle rect1, Rectangle rect2);                     
 bool checkCollisionCircs(Circle circ1, Circle circ2);                           // Check collision between two circles
 
 // Input
-int getKey();                                                                   // Get pressed key (ncurses)
-void flushInputBuf();                                                           // Flush input buffer (ncurses)
+int getKey();                                                                   // Get pressed key
+void flushInputBuf();                                                           // Flush input buffer
 
 // Debug
 void setDebug();                                                                // Enable debug menu

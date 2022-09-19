@@ -1,14 +1,26 @@
+#include <unistd.h>
+#include <pthread.h>
 #include "engine.h"
-#include "unistd.h"
 
 #define DEFAULT_CORE_BORDER             false
 #define DEFAULT_CORE_TARGET_FPS         12
 #define DEFAULT_CORE_COLOR              false
 #define DEFAULT_CORE_PREV_CLOCK_TIME    clock()
-#define DEFAULT_CORE_SLEEP_INCR         0
 #define DEFAULT_CORE_INPUT_ENABLED      false
 #define DEFAULT_CORE_DEBUG_ENABLED      false
 #define DEFAULT_CORE_DEBUG_HEIGHT       3
+
+//======================================================
+// Private Functions
+//======================================================
+
+// usleep() on a separate thread
+void *utimesleep(void *args)
+{
+    int *time = (int *)args;
+    usleep(*time);
+    return NULL;
+}
 
 //======================================================
 // Initialization
@@ -29,8 +41,6 @@ void initEngine() {
     CORE.border             = DEFAULT_CORE_BORDER;
     CORE.target_fps         = DEFAULT_CORE_TARGET_FPS;
     CORE.color_enabled      = DEFAULT_CORE_COLOR;
-    CORE.prev_clock_time    = DEFAULT_CORE_PREV_CLOCK_TIME;
-    CORE.sleep_incr         = DEFAULT_CORE_SLEEP_INCR;
     CORE.debug_enabled      = DEFAULT_CORE_DEBUG_ENABLED;
     CORE.debug_height       = DEFAULT_CORE_DEBUG_HEIGHT;
 }
@@ -90,12 +100,14 @@ void setBorder() {
 
 // Render viewport to terminal
 void renderViewport() {
-    CORE.prev_clock_time = clock();
-    
+    long prev_clock = clock();
     int full_height = CORE.height;      // rendered full (viewport + debug) height
     int w_width, w_height;              // terminal window size
     int border_padding = 0;             // border padding
     int border_padding_amt = 0;         // border padding amount
+
+    pthread_t sleep_id;                 // sleep thread id
+    int sleep_time;                     // sleep time (in microseconds)
 
     getmaxyx(stdscr, w_height, w_width);
 
@@ -149,13 +161,13 @@ void renderViewport() {
         wrefresh(CORE.debug_menu);
     }
 
-    int sleep_ticks = 0; // Since clock() stops while sleeping
-    if ((CLOCKS_PER_SEC / CORE.target_fps) - (clock() - CORE.prev_clock_time) > 0) {
-        sleep_ticks = (CLOCKS_PER_SEC / CORE.target_fps) - (clock() - CORE.prev_clock_time);
-        usleep(sleep_ticks);
+    long curr_clock = clock();
+    if ((CLOCKS_PER_SEC / CORE.target_fps) - (curr_clock - prev_clock) > 0) {
+        sleep_time = (CLOCKS_PER_SEC / CORE.target_fps) - (curr_clock - prev_clock);
+        pthread_create(&sleep_id, NULL, utimesleep, (void *)&sleep_time);
+        pthread_join(sleep_id, NULL);
     }
-    CORE.sleep_incr += sleep_ticks;
-    CORE.current_fps = (double)(CLOCKS_PER_SEC) / (double)((clock() - CORE.prev_clock_time + sleep_ticks));
+    CORE.current_fps = (double)(CLOCKS_PER_SEC) / (double)((clock() - prev_clock) * 100);
 }
 
 // Clear viewport
@@ -179,16 +191,12 @@ void clearViewport() {
  * Set target refresh rate
  * @param fps FPS
  */
-void setTargetFPS(unsigned short fps) {
-    CORE.target_fps = fps;
+void setTargetFPS(int fps) {
+    CORE.target_fps = abs(fps);
 }
 
 double getCurrentFPS() {
     return CORE.current_fps;
-}
-// Return clock time (milliseconds)
-unsigned int getClocktime() {
-    return clock() + CORE.sleep_incr;
 }
 
 
