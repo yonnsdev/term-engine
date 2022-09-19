@@ -33,7 +33,6 @@ make
 ```
 (example makefile)
 
-INCFLAGS = -Iengine
 LDFLAGS  = -lncurses
 LDFLAGS += engine/engine.a
 ```
