@@ -4,6 +4,7 @@
 
 [![C](https://img.shields.io/badge/c-%2300599C.svg?style=for-the-badge&logo=c&logoColor=white)](#)
 [![Terminal](https://img.shields.io/badge/Terminal-%234D4D4D.svg?style=for-the-badge&logo=windows-terminal&logoColor=white)](#)
+[![Wiki](https://img.shields.io/badge/Wiki-%23394e79.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/yonnsdev/term-engine/wiki)
 
 </div>
 
