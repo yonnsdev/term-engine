@@ -34,7 +34,7 @@ make
 (example makefile)
 
 LDFLAGS  = -lncurses
-LDFLAGS += engine/engine.a
+LDFLAGS += libs/engine.a
 ```
 
 ## Basic example
