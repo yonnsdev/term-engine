@@ -1,4 +1,4 @@
-#include "engine.h"
+#include "termengine.h"
 
 // Get pressed key (ncurses)
 int getKey() {

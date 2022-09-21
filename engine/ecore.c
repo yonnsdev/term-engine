@@ -1,6 +1,6 @@
 #include <unistd.h>
 #include <pthread.h>
-#include "engine.h"
+#include "termengine.h"
 
 #define DEFAULT_CORE_BORDER             false
 #define DEFAULT_CORE_TARGET_FPS         12
@@ -10,6 +10,11 @@
 #define DEFAULT_CORE_INPUT_ENABLED      false
 #define DEFAULT_CORE_DEBUG_ENABLED      false
 #define DEFAULT_CORE_DEBUG_HEIGHT       3
+
+//======================================================
+// Variables
+//======================================================
+CoreData CORE;  // system variable. accessible to user but not recommended tinkering with
 
 //======================================================
 // System Functions (Not accessable to user)
@@ -25,7 +30,7 @@ void *utimesleep(void *args)
 
 // Check if viewport is big enough to render
 void checkViewport() {
-    int full_height = CORE.height;      // rendered full (viewport + debug) height
+    int full_height = CORE.height;       // rendered full (viewport + debug) height
     CORE.border_padding = 0;             // border padding
     CORE.border_padding_amt = 0;         // border padding amount
 
@@ -228,7 +233,6 @@ unsigned long getFrameCount() {
 //======================================================
 
 /**
- * (USE CAREFULLY)
  * Draw pixel "#"
  * @param px        Precise x position
  * @param py        Presice y poisiton

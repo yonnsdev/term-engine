@@ -33,9 +33,11 @@ make
 
 ```
 (example makefile)
+INCFLAGS = -Ilibs/termengine
+CFLAGS  += $(INCFLAGS)
 
 LDFLAGS  = -lncurses
-LDFLAGS += libs/engine.a
+LDFLAGS += libs/termengine/engine.a
 ```
 
 ## Basic example

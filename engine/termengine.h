@@ -130,7 +130,7 @@ typedef enum {
 // Global Variables Definition
 //======================================================
 
-static CoreData CORE;
+extern CoreData CORE;
 
 //======================================================
 // Functions
@@ -151,13 +151,14 @@ void clearViewport();                                                           
 
 // Time
 
-void setTargetFPS(int);                                                         // Set target refresh rate (Recommend using default (12))
+void setTargetFPS(int fps);                                                     // Set target refresh rate (Recommend using default (12))
 unsigned long getFrameCount();                                                  // Get frame count since program start (Resets to 0 after 4e+9)
 
 // Draw
 
-void drawPixel(int precise_x, int precise_y, char ch, int color);               // Draw pixel "#"
+void drawPixel(int px, int py, char ch, int color);                             // Draw pixel "#"
 void drawPoint(int x, int y, char ch, int color);                               // Draw point "##"
+void drawText(int px, int py, bool wrap, char* text, int color);                // Draw text
 void drawLine(int x1, int y1, int x2, int y2, char ch, int color);              // Draw line
 void drawCircle(int x, int y, int r, bool fill, char ch, int color);            // Draw circle
 void drawCircleT(Circle circ, bool fill, char ch, int color);                   // Draw circle with circle type
@@ -182,8 +183,5 @@ void setDebug();                                                                
 void hideDebug();                                                               // Hide debug menu
 void quitDebug();                                                               // Quit debug menu
 void addDebugAttrib(int line_num, char* title, char* value);                    // Add/Update debug attributes
-
-// todo: add mouse input support
-// todo: add shaders
 
 #endif

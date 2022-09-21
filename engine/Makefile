@@ -5,12 +5,12 @@ CFLAGS = -std=c11 -Wall
 # src, obj, out
 SRC = $(shell find . -name "*.c")
 OBJ = $(SRC:.c=.o)
-OUT = engine.a
+OUT = termengine.a
 
 .PHONY: all clean
 all: build 
 
-%.o: %.c engine.h
+%.o: %.c termengine.h
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 build: $(OBJ)

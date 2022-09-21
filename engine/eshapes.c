@@ -1,9 +1,41 @@
 #include <math.h>
-#include "engine.h"
+#include <string.h>
+#include "termengine.h"
 
 //======================================================
 // Shapes
 //======================================================
+
+/**
+ * Draw text
+ * @param px    Precise x position
+ * @param py    Precise y position
+ * @param text  Text (string)
+ * @param color Foreground color
+ */
+void drawText(int px, int py, bool wrap, char* text, int color) {
+    int text_len = strlen(text);
+    for (int i = 0; i < text_len; i++) {
+        if (py < CORE.height) {
+            if (text[i] != ' ') {
+                drawPixel(px, py, text[i], color);
+            }
+
+            px++;
+
+            if (px == CORE.width * 2) {
+                if (wrap) {
+                    px = 0;
+                    py++;
+                } else {
+                    break;
+                }
+            }
+        } else {
+            break;
+        }
+    }
+} 
 
 /**
  * Draw line
@@ -11,7 +43,6 @@
  * @param x1    Start x position
  * @param y1    Start y poisiton
  * @param x2    End x position
- * @param y2    End y poisiton
  * @param ch    Character
  * @param color Foreground color
  */
