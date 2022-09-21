@@ -180,8 +180,6 @@ void flushInputBuf();                                                           
 // Debug
 
 void setDebug();                                                                // Enable debug menu
-void hideDebug();                                                               // Hide debug menu
-void quitDebug();                                                               // Quit debug menu
 void addDebugAttrib(int line_num, char* title, char* value);                    // Add/Update debug attributes
 
 #endif

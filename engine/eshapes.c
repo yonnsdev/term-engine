@@ -121,7 +121,7 @@ void drawCircle(int x, int y, int r, bool fill, char ch, int color) {
 }
 
 /**
- * Draw circle
+ * Draw circle (w/ Circle type)
  * (Midpoint circle algorithm)
  * @param circle    Circle
  * @param fill      Fill
@@ -133,7 +133,7 @@ void drawCircleT(Circle circ, bool fill, char ch, int color) {
 }
 
 /**
- * Draw square
+ * Draw rectangle
  * @param x         X position
  * @param y         Y position
  * @param w         Width
@@ -156,7 +156,7 @@ void drawRectangle(int x, int y, int w, int h, bool fill, char ch, int color) {
 }
 
 /**
- * Draw square
+ * Draw rectangle (w/ Rectangle type)
  * @param Rectangle Rectangle
  * @param fill      Fill
  * @param ch        Character
@@ -207,6 +207,11 @@ bool checkCollisionRects(Rectangle rect1, Rectangle rect2) {
     return false;
 }
 
+/**
+ * Check collision between two circles
+ * @param circ1     Circle 1
+ * @param circ2     Circle 2
+ */
 bool checkCollisionCircs(Circle circ1, Circle circ2) {
     // todo: find better alg
     double points_distance = sqrt(pow(abs(circ1.x - circ2.x), 2) + pow(abs(circ1.y - circ2.y), 2));

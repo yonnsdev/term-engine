@@ -280,19 +280,6 @@ void setDebug() {
     CORE.debug_data = (Debug*)malloc(CORE.debug_height * sizeof(Debug));
 }
 
-// Hide debug menu
-void hideDebug() {
-    CORE.debug_enabled = false;
-}
-
-// Quit debug menu
-void quitDebug() {
-    CORE.debug_enabled = false;
-
-    free(CORE.debug_data);
-    delwin(CORE.debug_menu);
-}
-
 // Update/Add debug attribute
 void addDebugAttrib(int line_num, char* title, char* value) {
     // Reset max height so empty space can be removed

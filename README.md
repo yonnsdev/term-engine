@@ -93,7 +93,7 @@ void renderViewport();                                                          
 void clearViewport();                                                           // Clear viewport
 
 // Time
-void setTargetFPS(int);                                                         // Set target refresh rate (Recommend using default (12))
+void setTargetFPS(int fps);                                                     // Set target refresh rate (Recommend using default (12))
 unsigned long getFrameCount();                                                  // Get frame count since program start (Resets to 0 after 4e+9)
 
 // Draw
@@ -118,7 +118,5 @@ void flushInputBuf();                                                           
 
 // Debug
 void setDebug();                                                                // Enable debug menu
-void hideDebug();                                                               // Hide debug menu
-void quitDebug();                                                               // Quit debug menu
 void addDebugAttrib(int line_num, char* title, char* value);                    // Add/Update debug attributes
 ```
