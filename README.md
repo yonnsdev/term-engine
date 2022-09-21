@@ -16,6 +16,8 @@
 
 ## Installation
 
+**Supported platforms: Linux, MacOS**
+
 1. Clone repository
 
 ```
