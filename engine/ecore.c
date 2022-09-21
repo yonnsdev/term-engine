@@ -1,14 +1,16 @@
-#include <unistd.h>
-#include <pthread.h>
 #include "termengine.h"
 
-#define DEFAULT_CORE_BORDER             false
+#include <unistd.h>
+#include <stdlib.h>
+#include <pthread.h>
+
+#define DEFAULT_CORE_BORDER             0
 #define DEFAULT_CORE_TARGET_FPS         12
 #define DEFAULT_CORE_FRAME_COUNT        0
-#define DEFAULT_CORE_COLOR              false
+#define DEFAULT_CORE_COLOR              0
 #define DEFAULT_CORE_PREV_CLOCK_TIME    clock()
-#define DEFAULT_CORE_INPUT_ENABLED      false
-#define DEFAULT_CORE_DEBUG_ENABLED      false
+#define DEFAULT_CORE_INPUT_ENABLED      0
+#define DEFAULT_CORE_DEBUG_ENABLED      0
 #define DEFAULT_CORE_DEBUG_HEIGHT       3
 
 //======================================================
@@ -115,7 +117,7 @@ void setViewport(int width, int height) {
 // Enable color rendering
 void setColor() {
     if (has_colors()) {
-        CORE.color_enabled = true;
+        CORE.color_enabled = 1;
 
         start_color();
         init_pair(COLOR_BLACK      , COLOR_BLACK      , COLOR_BLACK);
@@ -127,13 +129,13 @@ void setColor() {
         init_pair(COLOR_CYAN       , COLOR_CYAN       , COLOR_BLACK);
         init_pair(COLOR_WHITE      , COLOR_WHITE      , COLOR_BLACK);
     } else {
-        CORE.color_enabled = false;
+        CORE.color_enabled = 0;
     }
 }
 
 // Enable border
 void setBorder() {
-    CORE.border = true;
+    CORE.border = 1;
     wresize(CORE.viewport, CORE.height + 2, (CORE.width * 2) + 2);
     checkViewport();    // check again to make sure border is drawable
 }
@@ -269,7 +271,7 @@ void drawPoint(int x, int y, char ch, int color) {
 
 // Show debug menu
 void setDebug() {
-    CORE.debug_enabled = true;
+    CORE.debug_enabled = 1;
 
     int border_padding = 0;
     if (CORE.border) {

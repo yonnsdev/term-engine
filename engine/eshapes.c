@@ -1,6 +1,8 @@
-#include <math.h>
-#include <string.h>
 #include "termengine.h"
+
+#include <math.h>
+#include <stdlib.h>
+#include <string.h>
 
 //======================================================
 // Shapes
@@ -14,7 +16,7 @@
  * @param wrap  Wrap text
  * @param color Foreground color
  */
-void drawText(int px, int py, char* text, bool wrap, int color) {
+void drawText(int px, int py, char* text, int wrap, int color) {
     int text_len = strlen(text);
     for (int i = 0; i < text_len; i++) {
         if (py < CORE.height) {
@@ -54,7 +56,7 @@ void drawLine(int x1, int y1, int x2, int y2, char ch, int color) {
     int sy = y1 < y2 ? 1 : -1;
     int error = dx + dy;
 
-    while (true) {
+    while (1) {
         drawPoint(x1, y1, ch, color);
         if ((x1 == x2) && (y1 == y2)) {
             break;
@@ -87,13 +89,13 @@ void drawLine(int x1, int y1, int x2, int y2, char ch, int color) {
  * @param ch        Character
  * @param color     Foreground color
  */
-void drawCircle(int x, int y, int r, bool fill, char ch, int color) {
+void drawCircle(int x, int y, int r, int fill, char ch, int color) {
     int cx = r;
     int cy = 0;
     int err = 0;
  
     while (cx >= cy) {
-        if (fill == false) {
+        if (fill == 0) {
             drawPoint(x + cx, y + cy, ch, color);
             drawPoint(x + cy, y + cx, ch, color);
             drawPoint(x - cy, y + cx, ch, color);
@@ -128,7 +130,7 @@ void drawCircle(int x, int y, int r, bool fill, char ch, int color) {
  * @param ch        Character
  * @param color     Foreground color
  */
-void drawCircleT(Circle circ, bool fill, char ch, int color) {
+void drawCircleT(Circle circ, int fill, char ch, int color) {
     drawCircle(circ.x, circ.y, circ.radius, fill, ch, color);
 }
 
@@ -142,8 +144,8 @@ void drawCircleT(Circle circ, bool fill, char ch, int color) {
  * @param ch        Character
  * @param color     Foreground color
  */
-void drawRectangle(int x, int y, int w, int h, bool fill, char ch, int color) {
-    if (fill == false) {
+void drawRectangle(int x, int y, int w, int h, int fill, char ch, int color) {
+    if (fill == 0) {
         drawLine(x, y, x + w - 1, y, ch, color);
         drawLine(x, y + h - 1, x, y, ch, color);
         drawLine(x + w - 1, y, x + w - 1, y + h - 1, ch, color);
@@ -162,7 +164,7 @@ void drawRectangle(int x, int y, int w, int h, bool fill, char ch, int color) {
  * @param ch        Character
  * @param color     Foreground color
  */
-void drawRectangleT(Rectangle rect, bool fill, char ch, int color) {
+void drawRectangleT(Rectangle rect, int fill, char ch, int color) {
     drawRectangle(rect.x, rect.y, rect.width, rect.height, fill, ch, color);
 }
 
@@ -175,11 +177,11 @@ void drawRectangleT(Rectangle rect, bool fill, char ch, int color) {
  * @param point     Point
  * @param rect      Rectangle
  */
-bool checkCollisionPointRect(Vector2 point, Rectangle rect) {
+int checkCollisionPointRect(Vector2 point, Rectangle rect) {
     if ((point.x >= rect.x) && (point.x <= rect.x + rect.width - 1) && (point.y >= rect.y) && (point.y <= rect.y + rect.height - 1)) {
-        return true;
+        return 1;
     }
-    return false;
+    return 0;
 }
 
 /**
@@ -187,11 +189,11 @@ bool checkCollisionPointRect(Vector2 point, Rectangle rect) {
  * @param point     Point
  * @param circ      Circle
  */
-bool checkCollisionPointCirc(Vector2 point, Circle circ) {
+int checkCollisionPointCirc(Vector2 point, Circle circ) {
     if (pow(abs(circ.x - point.x), 2) + pow(abs(circ.y - point.y), 2) <= pow(circ.radius, 2)) {
-        return true;
+        return 1;
     }
-    return false;
+    return 0;
 }
 
 /**
@@ -199,12 +201,12 @@ bool checkCollisionPointCirc(Vector2 point, Circle circ) {
  * @param rect1     Rectangle 1
  * @param rect2     Rectangle 2
  */
-bool checkCollisionRects(Rectangle rect1, Rectangle rect2) {
+int checkCollisionRects(Rectangle rect1, Rectangle rect2) {
     if ((rect1.x <= (rect2.x + rect2.width - 1) && (rect1.x + rect1.width -1) >= rect2.x) && 
         (rect1.y <= (rect2.y + rect2.height - 1) && (rect1.y + rect1.height -1) >= rect2.y)) {
-            return true;
+            return 1;
         }
-    return false;
+    return 0;
 }
 
 /**
@@ -212,11 +214,11 @@ bool checkCollisionRects(Rectangle rect1, Rectangle rect2) {
  * @param circ1     Circle 1
  * @param circ2     Circle 2
  */
-bool checkCollisionCircs(Circle circ1, Circle circ2) {
+int checkCollisionCircs(Circle circ1, Circle circ2) {
     // todo: find better alg
     double points_distance = sqrt(pow(abs(circ1.x - circ2.x), 2) + pow(abs(circ1.y - circ2.y), 2));
     if (points_distance <= (circ1.radius + circ2.radius + 2)) {
-        return true;
+        return 1;
     }
-    return false;
+    return 0;
 }

@@ -1,9 +1,9 @@
 # compiler
 CC = clang
-CFLAGS = -std=c11 -Wall
+CFLAGS = -std=c11 -Wall 
 
-# src, obj, out
 SRC = $(shell find . -name "*.c")
+
 OBJ = $(SRC:.c=.o)
 OUT = termengine.a
 
@@ -11,7 +11,7 @@ OUT = termengine.a
 all: build 
 
 %.o: %.c termengine.h
-	$(CC) -o $@ -c $< $(CFLAGS)
+	$(CC) -o $@ -c $< $(CFLAGS) 
 
 build: $(OBJ)
 	ar -cr $(OUT) $(filter %.o, $^)

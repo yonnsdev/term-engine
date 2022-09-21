@@ -1,10 +1,7 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <ncurses.h>
-#include <time.h>
 #include <pthread.h>
 
 //======================================================
@@ -51,15 +48,15 @@ typedef struct CoreData{
     WINDOW *viewport;                                                           // Viewport
     Viewport *viewport_data;                                                    // Viewport data
     int width, height;                                                          // Viewport width & height
-    bool border;                                                                // Viewport border (Enabled/Disabled)
+    int border;                                                                // Viewport border (Enabled/Disabled)
     int target_fps;                                                             // Viewport target refresh rate
     unsigned long frame_count;                                                  // Frame count since program start
-    bool color_enabled;                                                         // Enable color (Enabled/Disabled)
+    int color_enabled;                                                         // Enable color (Enabled/Disabled)
 
     // Debug
     WINDOW *debug_menu;                                                         // Debug menu
     Debug *debug_data;                                                          // Debug menu data
-    bool debug_enabled;                                                         // Enable debug menu (Enabled/Disabled)
+    int debug_enabled;                                                         // Enable debug menu (Enabled/Disabled)
     int debug_height;                                                           // Debug menu height
 
     // System
@@ -158,19 +155,19 @@ unsigned long getFrameCount();                                                  
 
 void drawPixel(int px, int py, char ch, int color);                             // Draw pixel "#"
 void drawPoint(int x, int y, char ch, int color);                               // Draw point "##"
-void drawText(int px, int py, char* text, bool wrap, int color);                // Draw text
+void drawText(int px, int py, char* text, int wrap, int color);                // Draw text
 void drawLine(int x1, int y1, int x2, int y2, char ch, int color);              // Draw line
-void drawCircle(int x, int y, int r, bool fill, char ch, int color);            // Draw circle
-void drawCircleT(Circle circ, bool fill, char ch, int color);                   // Draw circle with circle type
-void drawRectangle(int x, int y, int w, int h, bool fill, char ch, int color);  // Draw rectangle
-void drawRectangleT(Rectangle rect, bool fill, char ch, int color);             // Draw rectangle with rectangle type
+void drawCircle(int x, int y, int r, int fill, char ch, int color);            // Draw circle
+void drawCircleT(Circle circ, int fill, char ch, int color);                   // Draw circle with circle type
+void drawRectangle(int x, int y, int w, int h, int fill, char ch, int color);  // Draw rectangle
+void drawRectangleT(Rectangle rect, int fill, char ch, int color);             // Draw rectangle with rectangle type
 
 // Collision
 
-bool checkCollisionPointRect(Vector2 point, Rectangle rect);                    // Check collision between point and rectangle
-bool checkCollisionPointCirc(Vector2 point, Circle circ);                       // Check collision between point and circle
-bool checkCollisionRects(Rectangle rect1, Rectangle rect2);                     // Check collision between two rectangles
-bool checkCollisionCircs(Circle circ1, Circle circ2);                           // Check collision between two circles
+int checkCollisionPointRect(Vector2 point, Rectangle rect);                    // Check collision between point and rectangle
+int checkCollisionPointCirc(Vector2 point, Circle circ);                       // Check collision between point and circle
+int checkCollisionRects(Rectangle rect1, Rectangle rect2);                     // Check collision between two rectangles
+int checkCollisionCircs(Circle circ1, Circle circ2);                           // Check collision between two circles
 
 // Input
 

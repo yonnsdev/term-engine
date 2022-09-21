@@ -45,7 +45,7 @@ LDFLAGS += libs/termengine/engine.a
 ```c
 #include "engine.h"
 
-bool windowClose();
+ windowClose();
 
 int main() {
     initEngine();
@@ -66,14 +66,14 @@ int main() {
     return 0;
 }
 
-bool windowClose() {
+int windowClose() {
     int key = getKey();
 
     switch (key) {
         case KEY_SPACE:
-            return true;
+            return 1;
         default:
-            return false;
+            return 0;
     }
 }
 ```
@@ -99,18 +99,18 @@ unsigned long getFrameCount();                                                  
 // Draw
 void drawPixel(int px, int py, char ch, int color);                             // Draw pixel "#"
 void drawPoint(int x, int y, char ch, int color);                               // Draw point "##"
-void drawText(int px, int py, char* text, bool wrap, int color);                // Draw text
+void drawText(int px, int py, char* text, int wrap, int color);                // Draw text
 void drawLine(int x1, int y1, int x2, int y2, char ch, int color);              // Draw line
-void drawRectangle(int x, int y, int w, int h, bool fill, char ch, int color);  // Draw rectangle
-void drawRectangleT(Rectangle rect, bool fill, char ch, int color);             // Draw rectangle with rectangle type
-void drawCircle(int x, int y, int r, bool fill, char ch, int color);            // Draw circle
-void drawCircleT(Circle circ, bool fill, char ch, int color);                   // Draw circle with circle type
+void drawRectangle(int x, int y, int w, int h, int fill, char ch, int color);  // Draw rectangle
+void drawRectangleT(Rectangle rect, int fill, char ch, int color);             // Draw rectangle with rectangle type
+void drawCircle(int x, int y, int r, int fill, char ch, int color);            // Draw circle
+void drawCircleT(Circle circ, int fill, char ch, int color);                   // Draw circle with circle type
 
 // Collision
-bool checkCollisionPointRect(Vector2 point, Rectangle rect);                    // Check collision between point and rectangle
-bool checkCollisionPointCirc(Vector2 point, Circle circ);                       // Check collision between point and circle
-bool checkCollisionRects(Rectangle rect1, Rectangle rect2);                     // Check collision between two rectangles
-bool checkCollisionCircs(Circle circ1, Circle circ2);                           // Check collision between two circles
+int checkCollisionPointRect(Vector2 point, Rectangle rect);                    // Check collision between point and rectangle
+int checkCollisionPointCirc(Vector2 point, Circle circ);                       // Check collision between point and circle
+int checkCollisionRects(Rectangle rect1, Rectangle rect2);                     // Check collision between two rectangles
+int checkCollisionCircs(Circle circ1, Circle circ2);                           // Check collision between two circles
 
 // Input
 int getKey();                                                                   // Get pressed key
