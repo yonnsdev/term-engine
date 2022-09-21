@@ -101,10 +101,10 @@ void drawPixel(int px, int py, char ch, int color);                             
 void drawPoint(int x, int y, char ch, int color);                               // Draw point "##"
 void drawText(int px, int py, char* text, bool wrap, int color);                // Draw text
 void drawLine(int x1, int y1, int x2, int y2, char ch, int color);              // Draw line
-void drawCircle(int x, int y, int r, bool fill, char ch, int color);            // Draw circle
-void drawCircleT(Circle circ, bool fill, char ch, int color);                   // Draw circle with circle type
 void drawRectangle(int x, int y, int w, int h, bool fill, char ch, int color);  // Draw rectangle
 void drawRectangleT(Rectangle rect, bool fill, char ch, int color);             // Draw rectangle with rectangle type
+void drawCircle(int x, int y, int r, bool fill, char ch, int color);            // Draw circle
+void drawCircleT(Circle circ, bool fill, char ch, int color);                   // Draw circle with circle type
 
 // Collision
 bool checkCollisionPointRect(Vector2 point, Rectangle rect);                    // Check collision between point and rectangle
