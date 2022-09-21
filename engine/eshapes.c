@@ -11,9 +11,10 @@
  * @param px    Precise x position
  * @param py    Precise y position
  * @param text  Text (string)
+ * @param wrap  Wrap text
  * @param color Foreground color
  */
-void drawText(int px, int py, bool wrap, char* text, int color) {
+void drawText(int px, int py, char* text, bool wrap, int color) {
     int text_len = strlen(text);
     for (int i = 0; i < text_len; i++) {
         if (py < CORE.height) {

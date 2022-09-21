@@ -99,7 +99,7 @@ unsigned long getFrameCount();                                                  
 // Draw
 void drawPixel(int px, int py, char ch, int color);                             // Draw pixel "#"
 void drawPoint(int x, int y, char ch, int color);                               // Draw point "##"
-void drawText(int px, int py, bool wrap, char* text, int color);                // Draw text
+void drawText(int px, int py, char* text, bool wrap, int color);                // Draw text
 void drawLine(int x1, int y1, int x2, int y2, char ch, int color);              // Draw line
 void drawCircle(int x, int y, int r, bool fill, char ch, int color);            // Draw circle
 void drawCircleT(Circle circ, bool fill, char ch, int color);                   // Draw circle with circle type
