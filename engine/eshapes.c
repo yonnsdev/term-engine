@@ -16,7 +16,7 @@
  * @param wrap  Wrap text
  * @param color Foreground color
  */
-void drawText(int px, int py, char* text, int wrap, int color) {
+void drawText(int px, int py, char *text, int wrap, int color) {
     int text_len = strlen(text);
     for (int i = 0; i < text_len; i++) {
         if (py < CORE.height) {
@@ -38,7 +38,7 @@ void drawText(int px, int py, char* text, int wrap, int color) {
             break;
         }
     }
-} 
+}
 
 /**
  * Draw line
@@ -93,7 +93,7 @@ void drawCircle(int x, int y, int r, int fill, char ch, int color) {
     int cx = r;
     int cy = 0;
     int err = 0;
- 
+
     while (cx >= cy) {
         if (fill == 0) {
             drawPoint(x + cx, y + cy, ch, color);
@@ -111,7 +111,6 @@ void drawCircle(int x, int y, int r, int fill, char ch, int color) {
             drawLine(x - cy, y - cx, x + cy, y - cx, ch, color);
         }
 
- 
         if (err <= 0) {
             cy += 1;
             err += 2 * cy + 1;
@@ -154,7 +153,7 @@ void drawRectangle(int x, int y, int w, int h, int fill, char ch, int color) {
         for (int i = 0; i < h; i++) {
             drawLine(x, y + i, x + w - 1, y + i, ch, color);
         }
-    } 
+    }
 }
 
 /**
@@ -178,7 +177,8 @@ void drawRectangleT(Rectangle rect, int fill, char ch, int color) {
  * @param rect      Rectangle
  */
 int checkCollisionPointRect(Vector2 point, Rectangle rect) {
-    if ((point.x >= rect.x) && (point.x <= rect.x + rect.width - 1) && (point.y >= rect.y) && (point.y <= rect.y + rect.height - 1)) {
+    if ((point.x >= rect.x) && (point.x <= rect.x + rect.width - 1) && (point.y >= rect.y) &&
+        (point.y <= rect.y + rect.height - 1)) {
         return 1;
     }
     return 0;
@@ -202,10 +202,10 @@ int checkCollisionPointCirc(Vector2 point, Circle circ) {
  * @param rect2     Rectangle 2
  */
 int checkCollisionRects(Rectangle rect1, Rectangle rect2) {
-    if ((rect1.x <= (rect2.x + rect2.width - 1) && (rect1.x + rect1.width -1) >= rect2.x) && 
-        (rect1.y <= (rect2.y + rect2.height - 1) && (rect1.y + rect1.height -1) >= rect2.y)) {
-            return 1;
-        }
+    if ((rect1.x <= (rect2.x + rect2.width - 1) && (rect1.x + rect1.width - 1) >= rect2.x) &&
+        (rect1.y <= (rect2.y + rect2.height - 1) && (rect1.y + rect1.height - 1) >= rect2.y)) {
+        return 1;
+    }
     return 0;
 }
 

@@ -4,14 +4,14 @@
 #include <stdlib.h>
 #include <pthread.h>
 
-#define DEFAULT_CORE_BORDER             0
-#define DEFAULT_CORE_TARGET_FPS         12
-#define DEFAULT_CORE_FRAME_COUNT        0
-#define DEFAULT_CORE_COLOR              0
-#define DEFAULT_CORE_PREV_CLOCK_TIME    clock()
-#define DEFAULT_CORE_INPUT_ENABLED      0
-#define DEFAULT_CORE_DEBUG_ENABLED      0
-#define DEFAULT_CORE_DEBUG_HEIGHT       3
+#define DEFAULT_CORE_BORDER 0
+#define DEFAULT_CORE_TARGET_FPS 12
+#define DEFAULT_CORE_FRAME_COUNT 0
+#define DEFAULT_CORE_COLOR 0
+#define DEFAULT_CORE_PREV_CLOCK_TIME clock()
+#define DEFAULT_CORE_INPUT_ENABLED 0
+#define DEFAULT_CORE_DEBUG_ENABLED 0
+#define DEFAULT_CORE_DEBUG_HEIGHT 3
 
 //======================================================
 // Variables
@@ -23,8 +23,7 @@ CoreData CORE;  // system variable. accessible to user but not recommended tinke
 //======================================================
 
 // usleep() on a separate thread
-void *utimesleep(void *args)
-{
+void *utimesleep(void *args) {
     int *time = (int *)args;
     usleep(*time);
     return NULL;
@@ -32,9 +31,9 @@ void *utimesleep(void *args)
 
 // Check if viewport is big enough to render
 void checkViewport() {
-    int full_height = CORE.height;       // rendered full (viewport + debug) height
-    CORE.border_padding = 0;             // border padding
-    CORE.border_padding_amt = 0;         // border padding amount
+    int full_height = CORE.height;  // rendered full (viewport + debug) height
+    CORE.border_padding = 0;        // border padding
+    CORE.border_padding_amt = 0;    // border padding amount
 
     if (CORE.border) {
         CORE.border_padding = 1;
@@ -53,7 +52,8 @@ void checkViewport() {
     }
 
     // Exits if viewport is smaller than needed area
-    if ((CORE.win_height <= full_height + (CORE.border_padding * CORE.border_padding_amt)) || (CORE.win_width <= CORE.width * 2 + (CORE.border_padding * CORE.border_padding_amt))) {
+    if ((CORE.win_height <= full_height + (CORE.border_padding * CORE.border_padding_amt)) ||
+        (CORE.win_width <= CORE.width * 2 + (CORE.border_padding * CORE.border_padding_amt))) {
         deinitEngine();
         printf("Exited: Window is smaller than viewport size!");
         exit(0);
@@ -76,12 +76,12 @@ void initEngine() {
     keypad(stdscr, TRUE);
 
     // defaults
-    CORE.border             = DEFAULT_CORE_BORDER;
-    CORE.target_fps         = DEFAULT_CORE_TARGET_FPS;
-    CORE.frame_count        = DEFAULT_CORE_FRAME_COUNT;
-    CORE.color_enabled      = DEFAULT_CORE_COLOR;
-    CORE.debug_enabled      = DEFAULT_CORE_DEBUG_ENABLED;
-    CORE.debug_height       = DEFAULT_CORE_DEBUG_HEIGHT;
+    CORE.border = DEFAULT_CORE_BORDER;
+    CORE.target_fps = DEFAULT_CORE_TARGET_FPS;
+    CORE.frame_count = DEFAULT_CORE_FRAME_COUNT;
+    CORE.color_enabled = DEFAULT_CORE_COLOR;
+    CORE.debug_enabled = DEFAULT_CORE_DEBUG_ENABLED;
+    CORE.debug_height = DEFAULT_CORE_DEBUG_HEIGHT;
 }
 
 // Deinitialize Engine
@@ -105,8 +105,8 @@ void setViewport(int width, int height) {
     CORE.height = height;
     CORE.viewport = newwin(CORE.height, CORE.width * 2, 0, 0);
 
-    CORE.viewport_data = (Viewport*)malloc((CORE.width * 2) * CORE.height * sizeof(Viewport));
-    for (int i=0; i < (CORE.width * 2) * CORE.height; i++) {
+    CORE.viewport_data = (Viewport *)malloc((CORE.width * 2) * CORE.height * sizeof(Viewport));
+    for (int i = 0; i < (CORE.width * 2) * CORE.height; i++) {
         CORE.viewport_data[i].ch = 0;
         CORE.viewport_data[i].color = 0;
     }
@@ -120,14 +120,14 @@ void setColor() {
         CORE.color_enabled = 1;
 
         start_color();
-        init_pair(COLOR_BLACK      , COLOR_BLACK      , COLOR_BLACK);
-        init_pair(COLOR_RED        , COLOR_RED        , COLOR_BLACK);
-        init_pair(COLOR_GREEN      , COLOR_GREEN      , COLOR_BLACK);
-        init_pair(COLOR_YELLOW     , COLOR_YELLOW     , COLOR_BLACK);
-        init_pair(COLOR_BLUE       , COLOR_BLUE       , COLOR_BLACK);
-        init_pair(COLOR_MAGENTA    , COLOR_MAGENTA    , COLOR_BLACK);
-        init_pair(COLOR_CYAN       , COLOR_CYAN       , COLOR_BLACK);
-        init_pair(COLOR_WHITE      , COLOR_WHITE      , COLOR_BLACK);
+        init_pair(COLOR_BLACK, COLOR_BLACK, COLOR_BLACK);
+        init_pair(COLOR_RED, COLOR_RED, COLOR_BLACK);
+        init_pair(COLOR_GREEN, COLOR_GREEN, COLOR_BLACK);
+        init_pair(COLOR_YELLOW, COLOR_YELLOW, COLOR_BLACK);
+        init_pair(COLOR_BLUE, COLOR_BLUE, COLOR_BLACK);
+        init_pair(COLOR_MAGENTA, COLOR_MAGENTA, COLOR_BLACK);
+        init_pair(COLOR_CYAN, COLOR_CYAN, COLOR_BLACK);
+        init_pair(COLOR_WHITE, COLOR_WHITE, COLOR_BLACK);
     } else {
         CORE.color_enabled = 0;
     }
@@ -137,7 +137,7 @@ void setColor() {
 void setBorder() {
     CORE.border = 1;
     wresize(CORE.viewport, CORE.height + 2, (CORE.width * 2) + 2);
-    checkViewport();    // check again to make sure border is drawable
+    checkViewport();  // check again to make sure border is drawable
 }
 
 // Render viewport to terminal
@@ -166,7 +166,8 @@ void renderViewport() {
                 wattron(CORE.viewport, COLOR_PAIR(CORE.viewport_data[i].color));
             }
 
-            mvwaddch(CORE.viewport, i / (CORE.width * 2) + CORE.border_padding, i % (CORE.width * 2) + CORE.border_padding, CORE.viewport_data[i].ch);
+            mvwaddch(CORE.viewport, i / (CORE.width * 2) + CORE.border_padding,
+                     i % (CORE.width * 2) + CORE.border_padding, CORE.viewport_data[i].ch);
 
             if (CORE.color_enabled) {
                 wattroff(CORE.viewport, COLOR_PAIR(CORE.viewport_data[i].color));
@@ -179,7 +180,8 @@ void renderViewport() {
     if (CORE.debug_enabled) {
         for (int i = 0; i < CORE.debug_height; i++) {
             if (CORE.debug_data[i].title != 0) {
-                mvwprintw(CORE.debug_menu, i + CORE.border_padding, 0 + CORE.border_padding, "%s: %s", CORE.debug_data[i].title, CORE.debug_data[i].value);
+                mvwprintw(CORE.debug_menu, i + CORE.border_padding, 0 + CORE.border_padding, "%s: %s",
+                          CORE.debug_data[i].title, CORE.debug_data[i].value);
             }
         }
         wrefresh(CORE.debug_menu);
@@ -206,12 +208,11 @@ void clearViewport() {
     if (CORE.debug_enabled) {
         werase(CORE.debug_menu);
     }
-    for (int i=0; i < (CORE.width * 2) * CORE.height; i++) {
+    for (int i = 0; i < (CORE.width * 2) * CORE.height; i++) {
         CORE.viewport_data[i].ch = 0;
         CORE.viewport_data[i].color = 0;
     }
 }
-
 
 //======================================================
 // Time
@@ -228,7 +229,6 @@ void setTargetFPS(int fps) {
 unsigned long getFrameCount() {
     return CORE.frame_count;
 }
-
 
 //======================================================
 //                         Draw
@@ -264,7 +264,6 @@ void drawPoint(int x, int y, char ch, int color) {
     }
 }
 
-
 //======================================================
 // Debugging
 //======================================================
@@ -278,12 +277,13 @@ void setDebug() {
         border_padding = 2;
     }
 
-    CORE.debug_menu = newwin(CORE.debug_height + border_padding, (CORE.width * 2) + border_padding, CORE.height + border_padding, 0);
-    CORE.debug_data = (Debug*)malloc(CORE.debug_height * sizeof(Debug));
+    CORE.debug_menu =
+        newwin(CORE.debug_height + border_padding, (CORE.width * 2) + border_padding, CORE.height + border_padding, 0);
+    CORE.debug_data = (Debug *)malloc(CORE.debug_height * sizeof(Debug));
 }
 
 // Update/Add debug attribute
-void addDebugAttrib(int line_num, char* title, char* value) {
+void addDebugAttrib(int line_num, char *title, char *value) {
     // Reset max height so empty space can be removed
     int max_height = DEFAULT_CORE_DEBUG_HEIGHT;
     for (int i = 0; i < CORE.debug_height; i++) {
@@ -295,8 +295,7 @@ void addDebugAttrib(int line_num, char* title, char* value) {
         CORE.debug_height = line_num;
     }
     // Resize debug_data for new data
-    CORE.debug_data = (Debug*)realloc(CORE.debug_data, CORE.debug_height * sizeof(Debug));
-
+    CORE.debug_data = (Debug *)realloc(CORE.debug_data, CORE.debug_height * sizeof(Debug));
 
     CORE.debug_data[line_num].line_num = line_num;
     CORE.debug_data[line_num].title = title;
