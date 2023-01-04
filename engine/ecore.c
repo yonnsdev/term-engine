@@ -180,8 +180,8 @@ void renderViewport() {
     if (CORE.debug_enabled) {
         for (int i = 0; i < CORE.debug_height; i++) {
             if (CORE.debug_data[i].title != 0) {
-                mvwprintw(CORE.debug_menu, i + CORE.border_padding, 0 + CORE.border_padding, "%s: %s",
-                          CORE.debug_data[i].title, CORE.debug_data[i].value);
+                mvwprintw(CORE.debug_menu, i + CORE.border_padding, 0 + CORE.border_padding,
+                          "%s: %s", CORE.debug_data[i].title, CORE.debug_data[i].value);
             }
         }
         wrefresh(CORE.debug_menu);
@@ -277,8 +277,8 @@ void setDebug() {
         border_padding = 2;
     }
 
-    CORE.debug_menu =
-        newwin(CORE.debug_height + border_padding, (CORE.width * 2) + border_padding, CORE.height + border_padding, 0);
+    CORE.debug_menu = newwin(CORE.debug_height + border_padding, (CORE.width * 2) + border_padding,
+                             CORE.height + border_padding, 0);
     CORE.debug_data = (Debug *)malloc(CORE.debug_height * sizeof(Debug));
 }
 
